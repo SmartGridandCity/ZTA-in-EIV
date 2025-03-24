@@ -37,10 +37,12 @@ The project supports real-time cybersecurity in V2X communication by analyzing C
 
 ## Installation
 
-```bash
-# Create virtual environment (optional)
-python -m venv v2x_env
-source v2x_env/bin/activate  # On Windows: v2x_env\Scripts\activate
+### Prerequisites
 
-# Install dependencies
+- Python 3.8+
+- Virtual environment (optional)
+
+### Dependencies
+
+```bash
 pip install numpy pandas scikit-learn tensorflow
