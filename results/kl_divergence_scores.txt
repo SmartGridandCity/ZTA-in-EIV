@@ -1,0 +1,11 @@
+KL Divergence Across Latent Time Chunks
+Window_Index	KL_Divergence
+1	0.001068
+2	0.000637
+3	0.004054
+4	0.004306
+5	0.000936
+6	0.005222
+
+Peak KL Divergence at Window 6: 0.005222
+KL Range: 0.000637 to 0.005222
