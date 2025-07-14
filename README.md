@@ -41,45 +41,60 @@ This Jupyter notebook implements a two-part deep-learning framework for intrusio
 
 ## 📖 Notebook Walkthrough
 
-- **Performance Summary (Cell #10)**  
-  Trains or loads four model variants (`Standard`, `Attention`, `Streaming`, `Augmented`) and computes Accuracy, Precision, Recall, F1. Outputs a table and saves it as `.txt` and `.pdf`.
+### Pipeline Main Steps
 
-- **Threshold Optimization (Cell #11)**  
-  Sweeps decision thresholds ∈ [0.1, 0.9) on ensemble probabilities to maximize F1. Reports optimal threshold (≈ 0.88) and F1 (≈ 0.464).
+1. **Data Ingestion & Preprocessing**  
+   - Load raw CAN/V2X CSV, handle missing values, resample/interpolate at 100 µs, normalize signals.
 
-- **F1 Score Curve by Threshold (Cell #12)**  
-  Plots F1 vs. threshold to visualize the trade-off.
+2. **Time-Series Windowing & Labeling**  
+   - Slide a 50-step window with 5-step stride, compute mean label per window, assign “Normal” (0) or “Attack” (1).
 
-- **Final Evaluation (Cell #13)**  
-  Applies the optimal threshold, prints and saves the classification report (Precision, Recall, F1) for “Normal” vs. “Attack”.
+3. **Class Balancing**  
+   - Upsample minority (attack) windows to match the count of normal windows.
 
-- **Confusion Matrix (Cell #14)**  
-  Displays the confusion matrix for the optimized ensemble.
+4. **Model Training**  
+   - Build and train four model variants:  
+     • Standard CNN–LSTM  
+     • Streaming (no attention)  
+     • Attention-augmented  
+     • Data-augmented (time-jitter & signal-masking)
 
-- **ROC & Precision-Recall Curves (Cell #15)**  
-  Computes and plots ROC and PR curves, reports AUCs.
+5. **Ensemble & Performance Summary**  
+   - Average model probabilities, compute Accuracy, Precision, Recall, F1.  
+   - Save `metrics_summary.txt` / `metrics_summary.pdf`.
 
-- **Stratified Cross-Validation (Cell #16)**  
-  Defines a `cross_validate_model` using `StratifiedKFold` to report average F1 across 5 folds.
+6. **Threshold Optimization**  
+   - Sweep decision thresholds in [0.1, 0.9) to maximize F1.  
+   - Generate `f1_vs_threshold.png`, record optimal threshold and F1 in `final_evaluation.txt`.
 
-- **Contrastive Learning Module (Cell #17)**  
-  *(Optional)* Sketch of a Siamese network for feature representation learning via contrastive loss.
+7. **Final Evaluation & Plots**  
+   - Apply optimal threshold, produce:  
+     • Confusion matrix → `confusion_matrix.png`  
+     • ROC curve → `roc_curve.png`  
+     • Precision–Recall curve → `precision_recall_curve.png`
 
-- **Drift Detection Visualizations**  
-  - **KL Divergence Plot**: time-series of KL(p‖q) between consecutive latent windows  
-  - **t-SNE Embedding**: 2D scatter of concatenated latent vectors across windows
+8. **Unsupervised Drift Detection**  
+   - Train a Conv-Autoencoder, extract latent vectors for consecutive time chunks.  
+   - Compute KL divergence between chunks and save `kl_divergence_scores.txt` and `kl_divergence_plot.png`.
+
+9. **Latent-Space Visualization**  
+   - Concatenate all latent vectors, run t-SNE, and save `tsne_plot.png` for drift inspection.
+
 
 ---
 
-## 📊 Outputs
+### Generated Outputs
 
-After running the notebook, check the `results/` directory for:
-
-- `metrics_summary.txt` / `.pdf` – Model performance table  
-- `final_evaluation.txt` – Classification report with optimized threshold  
-- `kl_divergence_plot.png` – Drift detector signal over time  
-- `tsne_plot.png` – Latent-space clustering across time windows  
-
+- confusion_matrix.png  
+- f1_vs_threshold.png  
+- final_evaluation.txt  
+- kl_divergence_plot.png  
+- kl_divergence_scores.txt  
+- metrics_summary.pdf  
+- metrics_summary.txt  
+- precision_recall_curve.png  
+- roc_curve.png  
+- tsne_plot.png  
 ---
 
 ## 🛠️ Customization
