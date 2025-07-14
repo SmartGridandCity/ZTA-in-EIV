@@ -1,4 +1,3 @@
-```markdown
 # ZTA Intrusion Detection Notebook
 
 This Jupyter notebook implements a two-part deep-learning framework for intrusion detection in vehicular (V2X) networks under a Zero-Trust Architecture (ZTA). It addresses:
